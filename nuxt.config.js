@@ -49,7 +49,10 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
     }
+  },
+
+  router: {
+    base: '/k-chiba/page-transition-slider'
   }
 }
