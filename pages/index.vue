@@ -1,33 +1,40 @@
 <template>
-  <section class="container">
-    <div>
-      <logo/>
-      <h1 class="title">
-        page-transition-example
-      </h1>
-      <h2 class="subtitle">
-        My exceptional Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-    </div>
+  <section class="container" :class="{reverse: isReverseTransition}">
+    <transition-group name="pageTransition">
+      <page1 key="page1" v-if="currentPage===1"/>
+      <page2 key="page2" v-else-if="currentPage===2"/>
+      <page3 key="page3" v-else/>
+    </transition-group>
+    <Footer @pageSelect="goSelectedPage"/>
   </section>
 </template>
 
 <script>
 import Logo from '~/components/Logo.vue'
+import page1 from '~/components/page-1.vue'
+import page2 from '~/components/page-2.vue'
+import page3 from '~/components/page-3.vue'
+import Footer from '~/components/Footer.vue'
 
 export default {
   components: {
-    Logo
+    Logo,
+    page1,
+    page2,
+    page3,
+    Footer,
+  },
+  data() {
+    return {
+      currentPage: 1,
+      isReverseTransition: true,
+    }
+  },
+  methods: {
+    goSelectedPage( pageNumber ) {
+      this.isReverseTransition = this.currentPage > pageNumber
+      this.currentPage = pageNumber;
+    }
   }
 }
 </script>
@@ -36,10 +43,10 @@ export default {
 
 .container {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
+  padding: 1px;
+  border: 20px solid #38806f;
+  overflow-x: hidden;
 }
 
 .title {
@@ -62,5 +69,42 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+/* leaving page */
+.pageTransition-leave-active {
+  transition: opacity 0.7s, transform 1s;
+  transform: translateX(-70%);
+  opacity: 0;
+}
+.pageTransition-leave {
+  opacity: 0;
+  transform: translateX(0);
+}
+/* entering page */
+.pageTransition-enter-active {
+  transition: transform 1s;
+  transform: translateX(0);
+}
+.pageTransition-enter {
+  transform: translateX(100%);
+}
+/* reverse transition */
+/* leaving page */
+.reverse .pageTransition-leave-active {
+  transition: opacity 0.7s, transform 1s;
+  transform: translateX(70%);
+  opacity: 0;
+}
+.reverse .pageTransition-leave {
+  opacity: 0;
+  transform: translateX(0);
+}
+/* entering page */
+.reverse .pageTransition-enter-active {
+  transition: transform 1s;
+  transform: translateX(0);
+}
+.reverse .pageTransition-enter {
+  transform: translateX(-100%);
 }
 </style>
